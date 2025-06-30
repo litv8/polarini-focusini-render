@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Focus Detection</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { text-align: center; }
+        .upload-box { 
+            border: 2px dashed #ccc; 
+            padding: 40px; 
+            margin: 30px 0;
+            cursor: pointer;
+        }
+        .upload-box:hover { background-color: #f9f9f9; }
+        #file-input { display: none; }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Определение зоны фокуса на изображении</h1>
+        <p>Загрузите фотографию для обработки</p>
+        
+        <form method="post" action="/upload" enctype="multipart/form-data">
+            <div class="upload-box" onclick="document.getElementById('file-input').click()">
+                <p>Нажмите для выбора файла или перетащите изображение</p>
+                <input type="file" name="file" id="file-input" accept="image/*">
+            </div>
+            <button type="submit">Обработать</button>
+        </form>
+        
+        <p>Поддерживаемые форматы: JPG, PNG (макс. размер 8MB)</p>
+    </div>
+
+    <script>
+        // Обработка перетаскивания файлов
+        const dropArea = document.querySelector('.upload-box');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+            dropArea.style.backgroundColor = '#f1f1f1';
+        }
+        
+        function unhighlight() {
+            dropArea.style.backgroundColor = '';
+        }
+        
+        dropArea.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            document.getElementById('file-input').files = files;
+        }
+    </script>
+</body>
+</html>
