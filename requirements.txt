@@ -1,0 +1,8 @@
+flask
+opencv-python-headless
+numpy
+onnxruntime
+requests
+tqdm
+platformdirs
+gunicorn
